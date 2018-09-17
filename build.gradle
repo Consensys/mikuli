@@ -1,0 +1,60 @@
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.15.0"
+    id "me.champeau.gradle.jmh" version "0.4.7"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: "me.champeau.gradle.jmh"
+
+
+repositories {
+    jcenter()
+   // mavenLocal()
+    mavenCentral()
+   // maven { url "http://repo.maven.apache.org/maven2" }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+sourceSets {
+    jmh
+}
+
+task benchmarks(type: JavaExec, description: 'Executing JMH benchmarks') {
+    classpath = sourceSets.jmh.runtimeClasspath
+    main = 'org.openjdk.jmh.Main'
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'org.miracl.milagro.amcl:milagro-crypto-java:0.3.0'
+    jmhCompile project
+    jmhCompile 'org.openjdk.jmh:jmh-core:1.19'
+    jmhCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.19'
+}
+
+jmh {
+    duplicateClassesStrategy = 'warn'
+}
+
+
+spotless {
+    java {
+        eclipse().configFile 'eclipse-java-google-style.xml'
+    }
+}
+
+test {
+    afterSuite { desc, result ->
+        if (!desc.parent)
+            println("${result.resultType} " +
+                    "(${result.testCount} tests, " +
+                    "${result.successfulTestCount} successes, " +
+                    "${result.failedTestCount} failures, " +
+                    "${result.skippedTestCount} skipped)")
+    }
+}
