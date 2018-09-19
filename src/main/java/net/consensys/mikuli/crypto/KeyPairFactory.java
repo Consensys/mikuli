@@ -8,11 +8,10 @@ import org.apache.milagro.amcl.BLS381.ROM;
 public class KeyPairFactory {
 
 	static public KeyPair createKeyPair() {
-		ECP g1Generator = ECP.generator();
+		ECP g1Generator = SystemParameters.g1Generator;
 		RAND rng = new RAND();
 
-		BIG curveOrder = new BIG(ROM.CURVE_Order);
-		BIG secret = BIG.randomnum(curveOrder, rng);
+		BIG secret = BIG.randomnum(SystemParameters.curveOrder, rng);
 
 		PrivateKey privateKey = new PrivateKey(secret);
 		PublicKey publicKey = new PublicKey(g1Generator.mul(secret));

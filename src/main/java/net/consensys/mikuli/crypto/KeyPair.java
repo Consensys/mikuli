@@ -17,6 +17,4 @@ public class KeyPair {
 	public PrivateKey getPrivateKey() {
 		return privateKey;
 	}
-
-	
 }

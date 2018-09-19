@@ -6,7 +6,11 @@ public class PublicKey {
 
 	private final ECP point;
 
-	public PublicKey(ECP point) {
+	protected PublicKey(ECP point) {
 		this.point = point;
+	}
+	
+	protected ECP getECPpoint() {
+		return point;
 	}
 }
