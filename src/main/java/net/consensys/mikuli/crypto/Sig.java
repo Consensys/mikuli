@@ -31,7 +31,7 @@ public class Sig {
 		public PublicKey getPublicKey() {
 			return publicKey;
 		}
-		
+
 		public Signature getSignature() {
 			return signature;
 		}
@@ -70,6 +70,22 @@ public class Sig {
 		SignatureAndPublicKey agg = new SignatureAndPublicKey(sig, pubKey);
 
 		return agg;
+	}
+
+	public static Signature addSignatures(Signature sig1, Signature sig2) {
+		Signature sig = new Signature(new ECP2());
+		sig.ecp2Point.add(sig1.ecp2Point);
+		sig.ecp2Point.add(sig2.ecp2Point);
+		sig.ecp2Point.affine();
+		return sig;
+	}
+
+	public static PublicKey addPublicKeys(PublicKey pk1, PublicKey pk2) {
+		PublicKey pubKey = new PublicKey(new ECP());
+		pubKey.getECPpoint().add(pk1.getECPpoint());
+		pubKey.getECPpoint().add(pk2.getECPpoint());
+		pubKey.getECPpoint().affine();
+		return pubKey;
 	}
 
 	private static ECP2 hashFunction(byte[] message) {
