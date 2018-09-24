@@ -1,6 +1,5 @@
 package mikuli;
 
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,10 +10,8 @@ import org.junit.Test;
 
 import net.consensys.mikuli.crypto.KeyPair;
 import net.consensys.mikuli.crypto.KeyPairFactory;
-import net.consensys.mikuli.crypto.PublicKey;
-import net.consensys.mikuli.crypto.Sig;
-import net.consensys.mikuli.crypto.Sig.Signature;
-import net.consensys.mikuli.crypto.Sig.SignatureAndPublicKey;
+import net.consensys.mikuli.crypto.SignatureAndPublicKey;
+import net.consensys.mikuli.crypto.SignatureService;
 
 public class SignatureTest {
 
@@ -23,9 +20,9 @@ public class SignatureTest {
 		KeyPair keyPair = KeyPairFactory.createKeyPair();
 
 		byte[] message = "Hello".getBytes();
-		SignatureAndPublicKey sigAndPubKey = Sig.sign(keyPair, message);
+		SignatureAndPublicKey sigAndPubKey = SignatureService.sign(keyPair, message);
 
-		Boolean isValid = Sig.verify(sigAndPubKey.getPublicKey(), sigAndPubKey.getSignature(), message);
+		Boolean isValid = SignatureService.verify(sigAndPubKey.getPublicKey(), sigAndPubKey.getSignature(), message);
 
 		assertTrue(isValid);
 	}
@@ -37,33 +34,46 @@ public class SignatureTest {
 
 		List<SignatureAndPublicKey> sigs = getSignaturesAndPublicKeys(message);
 
-		SignatureAndPublicKey sigAndPubKey = Sig.aggregate(sigs);
+		SignatureAndPublicKey sigAndPubKey = SignatureService.aggregate(sigs);
 
-		PublicKey aggPubKey = sigAndPubKey.getPublicKey();
-		Signature aggSig = sigAndPubKey.getSignature();
-
-		Boolean isValid = Sig.verify(aggPubKey, aggSig, message);
+		Boolean isValid = SignatureService.verify(sigAndPubKey, message);
 
 		assertTrue(isValid);
 	}
-	
+
 	@Test
-	public void testCurruptedMessage() {
+	public void testCorruptedMessage() {
 		byte[] message = "Hello".getBytes();
 
 		List<SignatureAndPublicKey> sigs = getSignaturesAndPublicKeys(message);
 
-		SignatureAndPublicKey sigAndPubKey = Sig.aggregate(sigs);
-
-		PublicKey aggPubKey = sigAndPubKey.getPublicKey();
-		Signature aggSig = sigAndPubKey.getSignature();
+		SignatureAndPublicKey sigAndPubKey = SignatureService.aggregate(sigs);
 
 		byte[] corruptedMessage = "Not Hello".getBytes();
 
-		Boolean isValid = Sig.verify(aggPubKey, aggSig, corruptedMessage);
+		Boolean isValid = SignatureService.verify(sigAndPubKey, corruptedMessage);
 
 		assertFalse(isValid);
-	
+	}
+
+	@Test
+	public void testCorruptedSignatute() {
+		byte[] message = "Hello".getBytes();
+
+		List<SignatureAndPublicKey> sigs = getSignaturesAndPublicKeys(message);
+
+		KeyPair keyPair = KeyPairFactory.createKeyPair();
+		byte[] notHello = "Not Hello".getBytes();
+
+		SignatureAndPublicKey additionalSignature = SignatureService.sign(keyPair, notHello);
+
+		sigs.add(additionalSignature);
+
+		SignatureAndPublicKey sigAndPubKey = SignatureService.aggregate(sigs);
+
+		Boolean isValid = SignatureService.verify(sigAndPubKey, message);
+
+		assertFalse(isValid);
 	}
 
 	private List<SignatureAndPublicKey> getSignaturesAndPublicKeys(byte[] message) {
@@ -71,9 +81,9 @@ public class SignatureTest {
 		KeyPair keyPair2 = KeyPairFactory.createKeyPair();
 		KeyPair keyPair3 = KeyPairFactory.createKeyPair();
 
-		SignatureAndPublicKey sigAndPubKey1 = Sig.sign(keyPair1, message);
-		SignatureAndPublicKey sigAndPubKey2 = Sig.sign(keyPair2, message);
-		SignatureAndPublicKey sigAndPubKey3 = Sig.sign(keyPair3, message);
+		SignatureAndPublicKey sigAndPubKey1 = SignatureService.sign(keyPair1, message);
+		SignatureAndPublicKey sigAndPubKey2 = SignatureService.sign(keyPair2, message);
+		SignatureAndPublicKey sigAndPubKey3 = SignatureService.sign(keyPair3, message);
 
 		List<SignatureAndPublicKey> sigs = new ArrayList<SignatureAndPublicKey>();
 		sigs.add(sigAndPubKey1);
@@ -82,6 +92,4 @@ public class SignatureTest {
 
 		return sigs;
 	}
-	
-
 }
