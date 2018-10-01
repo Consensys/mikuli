@@ -1,7 +1,7 @@
 package net.consensys.mikuli.crypto;
 
 import org.apache.milagro.amcl.BLS381.BIG;
-import org.apache.milagro.amcl.BLS381.ECP2;
+import org.apache.milagro.amcl.BLS381.ECP;
 
 public class PrivateKey {
 
@@ -11,9 +11,9 @@ public class PrivateKey {
 		this.privateKey = privKey;
 	}
 
-	protected ECP2 sign(ECP2 p) {
-		ECP2 ecp2 = new ECP2();
-		ecp2.copy(p);
-		return ecp2.mul(privateKey);
+	protected ECP sign(ECP p) {
+		ECP ecp = new ECP();
+		ecp.copy(p);
+		return ecp.mul(privateKey);
 	}
 }
