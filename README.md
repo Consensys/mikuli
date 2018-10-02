@@ -10,7 +10,7 @@ Curve: **BLS-12 381**
 
 To run tests and benchmarks: **mvn clean install**
 
-**Finite Fields operation benchmarks:**
+**Group operation benchmarks:**
 
 Benchmark                              | Mode |  Cnt |  Score  | Error    | Units
 ---------------------------------------|------|------|---------|----------|----------------------------
