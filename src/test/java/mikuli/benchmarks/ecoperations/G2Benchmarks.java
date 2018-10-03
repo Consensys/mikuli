@@ -19,7 +19,7 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-@Fork(3)
+@Fork(1)
 public class G2Benchmarks {
 
 	private ECP2 p;

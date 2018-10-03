@@ -23,10 +23,10 @@ public class BenchmarkTest {
 
 	private static final Options opt = new OptionsBuilder()
 			.include(SerializationBenchmarks.class.getSimpleName())
-		/*	.include(G1Benchmarks.class.getSimpleName())
+			.include(G1Benchmarks.class.getSimpleName())
 			.include(G2Benchmarks.class.getSimpleName())
 			.include(PairingBenchmarks.class.getSimpleName())
-			.include(GTBenchmarks.class.getSimpleName())*/
+			.include(GTBenchmarks.class.getSimpleName())
 			.build();
 
 	@Test

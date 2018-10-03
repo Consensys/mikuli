@@ -50,11 +50,4 @@ public class SerializationBenchmarks {
 		ECP point = ECP.fromBytes(serializedCompressedPoint);
 		return point;
 	}
-	
-	public static void main(String[] args) {
-		SerializationBenchmarks x = new SerializationBenchmarks();
-		x.prepare();
-		x.pointDeSerializationWithCompression();
-	}
-
 }
