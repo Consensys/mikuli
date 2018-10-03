@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -23,8 +24,8 @@ public class SignatureTest {
 		KeyPair keyPair = KeyPairFactory.createKeyPair();
 		byte[] message = "Hello".getBytes();
 		SignatureAndPublicKey sigAndPubKey = BLS12381.sign(keyPair, message);
-	
-		Boolean isValid = BLS12381.verify(sigAndPubKey.getPublicKey(), sigAndPubKey.getSignature(), message);
+
+		Boolean isValid = BLS12381.verify(sigAndPubKey.publicKey(), sigAndPubKey.signature(), message);
 		assertTrue(isValid);
 	}
 
@@ -33,7 +34,7 @@ public class SignatureTest {
 		byte[] message = "Hello".getBytes();
 		List<SignatureAndPublicKey> sigs = getSignaturesAndPublicKeys(message);
 		SignatureAndPublicKey sigAndPubKey = BLS12381.aggregate(sigs);
-		
+
 		Boolean isValid = BLS12381.verify(sigAndPubKey, message);
 		assertTrue(isValid);
 	}
@@ -48,7 +49,7 @@ public class SignatureTest {
 		Boolean isValid = BLS12381.verify(sigAndPubKey, corruptedMessage);
 		assertFalse(isValid);
 	}
-	
+
 	@Test
 	public void testCorruptedSignature() {
 		byte[] message = "Hello".getBytes();
@@ -60,7 +61,7 @@ public class SignatureTest {
 		sigs.add(additionalSignature);
 
 		SignatureAndPublicKey sigAndPubKey = BLS12381.aggregate(sigs);
-		
+
 		Boolean isValid = BLS12381.verify(sigAndPubKey, message);
 		assertFalse(isValid);
 	}
@@ -69,17 +70,17 @@ public class SignatureTest {
 	public void testSerialization() {
 		KeyPair keyPair = KeyPairFactory.createKeyPair();
 		byte[] message = "Hello".getBytes();
-		Signature signature = BLS12381.sign(keyPair, message).getSignature();
+		Signature signature = BLS12381.sign(keyPair, message).signature();
 
-		byte[] sigTobytes = BLS12381.encodeSignature(signature);
-		Signature sigFromBytes = BLS12381.decodeSignature(sigTobytes);
+		byte[] sigTobytes = signature.encode();
+		Signature sigFromBytes = Signature.decode(sigTobytes);
 
 		assertEquals(signature, sigFromBytes);
 		assertEquals(signature.hashCode(), sigFromBytes.hashCode());
 
-		PublicKey pubKey = keyPair.getPublicKey();
-		byte[] pubKeyTobytes = BLS12381.encodePublicKey(pubKey);
-		PublicKey pubKeyFromBytes = BLS12381.decodePublicKey(pubKeyTobytes);
+		PublicKey pubKey = keyPair.publicKey();
+		byte[] pubKeyTobytes = pubKey.encode();
+		PublicKey pubKeyFromBytes = PublicKey.decode(pubKeyTobytes);
 
 		assertEquals(pubKey, pubKeyFromBytes);
 		assertEquals(pubKey.hashCode(), pubKeyFromBytes.hashCode());

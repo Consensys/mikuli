@@ -5,16 +5,19 @@ public final class KeyPair {
 	private final PrivateKey privateKey;
 	private final PublicKey publicKey;
 
-	public KeyPair(PrivateKey privateKey, PublicKey publicKey) {
+	KeyPair(PrivateKey privateKey, PublicKey publicKey) {
+		if (privateKey == null || publicKey == null) {
+			throw new NullPointerException("KeyPair was not properly initialized");
+		}
 		this.privateKey = privateKey;
 		this.publicKey = publicKey;
 	}
 
-	public PublicKey getPublicKey() {
+	public PublicKey publicKey() {
 		return publicKey;
 	}
 
-	public PrivateKey getPrivateKey() {
+	public PrivateKey privateKey() {
 		return privateKey;
 	}
 }

@@ -22,10 +22,12 @@ PairingBenchmarks.pairing               avgt   20  12.318 ±  0.337  ms/op
 public class BenchmarkTest {
 
 	private static final Options opt = new OptionsBuilder()
-			.include(G1Benchmarks.class.getSimpleName())
+			.include(SerializationBenchmarks.class.getSimpleName())
+		/*	.include(G1Benchmarks.class.getSimpleName())
 			.include(G2Benchmarks.class.getSimpleName())
 			.include(PairingBenchmarks.class.getSimpleName())
-			.include(GTBenchmarks.class.getSimpleName()).build();
+			.include(GTBenchmarks.class.getSimpleName())*/
+			.build();
 
 	@Test
 	public void runJmhBenchmark() throws RunnerException {
