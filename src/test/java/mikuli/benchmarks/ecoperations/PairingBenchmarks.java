@@ -1,7 +1,6 @@
 package mikuli.benchmarks.ecoperations;
 
 import java.util.concurrent.TimeUnit;
-
 import org.apache.milagro.amcl.RAND;
 import org.apache.milagro.amcl.BLS381.ECP;
 import org.apache.milagro.amcl.BLS381.ECP2;
@@ -23,20 +22,20 @@ import org.openjdk.jmh.annotations.State;
 @Fork(1)
 public class PairingBenchmarks {
 
-	private ECP pointInG1;
-	private ECP2 pointInG2;
+  private ECP pointInG1;
+  private ECP2 pointInG2;
 
-	@Setup
-	public void prepare() {
-		RAND rng = new RAND();
-		rng.sirand(123);
-		pointInG1 = Utils.createRandomPointInG1(rng);
-		pointInG2 = Utils.createRandomPointInG2(rng);
-	}
+  @Setup
+  public void prepare() {
+    RAND rng = new RAND();
+    rng.sirand(123);
+    pointInG1 = Utils.createRandomPointInG1(rng);
+    pointInG2 = Utils.createRandomPointInG2(rng);
+  }
 
-	@Benchmark
-	public FP12 pairing() {
-		FP12 e = PAIR.ate(pointInG2, pointInG1);
-		return PAIR.fexp(e);
-	}
+  @Benchmark
+  public FP12 pairing() {
+    FP12 e = PAIR.ate(pointInG2, pointInG1);
+    return PAIR.fexp(e);
+  }
 }

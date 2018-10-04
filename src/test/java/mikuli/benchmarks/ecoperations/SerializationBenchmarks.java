@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.milagro.amcl.RAND;
 import org.apache.milagro.amcl.BLS381.BIG;
 import org.apache.milagro.amcl.BLS381.ECP;
-import org.apache.milagro.amcl.BLS381.ROM;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -21,33 +20,33 @@ import org.openjdk.jmh.annotations.State;
 @Fork(1)
 public class SerializationBenchmarks {
 
-	private ECP p;
-	byte[] serializedCompressedPoint;
-	byte[] serializedPoint;
+  private ECP p;
+  byte[] serializedCompressedPoint;
+  byte[] serializedPoint;
 
-	@Setup
-	public void prepare() {
-		RAND rng = new RAND();
-		rng.sirand(123);
-		p = Utils.createRandomPointInG1(rng);
-		int pointSize = BIG.MODBYTES;
+  @Setup
+  public void prepare() {
+    RAND rng = new RAND();
+    rng.sirand(123);
+    p = Utils.createRandomPointInG1(rng);
+    int pointSize = BIG.MODBYTES;
 
-		serializedCompressedPoint = new byte[pointSize + 1];
-		p.toBytes(serializedCompressedPoint, true);
+    serializedCompressedPoint = new byte[pointSize + 1];
+    p.toBytes(serializedCompressedPoint, true);
 
-		serializedPoint = new byte[2 * pointSize + 1];
-		p.toBytes(serializedPoint, false);
-	}
+    serializedPoint = new byte[2 * pointSize + 1];
+    p.toBytes(serializedPoint, false);
+  }
 
-	@Benchmark
-	public ECP pointDeSerializationNoCompression() {
-		ECP point = ECP.fromBytes(serializedPoint);
-		return point;
-	}
+  @Benchmark
+  public ECP pointDeSerializationNoCompression() {
+    ECP point = ECP.fromBytes(serializedPoint);
+    return point;
+  }
 
-	@Benchmark
-	public ECP pointDeSerializationWithCompression() {
-		ECP point = ECP.fromBytes(serializedCompressedPoint);
-		return point;
-	}
+  @Benchmark
+  public ECP pointDeSerializationWithCompression() {
+    ECP point = ECP.fromBytes(serializedCompressedPoint);
+    return point;
+  }
 }

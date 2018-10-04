@@ -1,7 +1,6 @@
 package mikuli.benchmarks.ecoperations;
 
 import java.util.concurrent.TimeUnit;
-
 import org.apache.milagro.amcl.RAND;
 import org.apache.milagro.amcl.BLS381.BIG;
 import org.apache.milagro.amcl.BLS381.ECP;
@@ -14,29 +13,29 @@ import org.openjdk.jmh.annotations.*;
 @Fork(1)
 public class G1Benchmarks {
 
-	private ECP p;
-	private ECP point = ECP.generator();
-	private BIG random;
+  private ECP p;
+  private ECP point = ECP.generator();
+  private BIG random;
 
-	@Setup
-	public void prepare() {
-		RAND rng = new RAND();
-		rng.sirand(123);
-		p = Utils.createRandomPointInG1(rng);
+  @Setup
+  public void prepare() {
+    RAND rng = new RAND();
+    rng.sirand(123);
+    p = Utils.createRandomPointInG1(rng);
 
-		BIG random = BIG.randomnum(new BIG(ROM.CURVE_Order), rng);
-		this.random = random;
-	}
+    BIG random = BIG.randomnum(new BIG(ROM.CURVE_Order), rng);
+    this.random = random;
+  }
 
-	@Benchmark
-	public ECP pointAdditionInG1() {
-		point.add(p);
-		return point;
-	}
+  @Benchmark
+  public ECP pointAdditionInG1() {
+    point.add(p);
+    return point;
+  }
 
-	@Benchmark
-	public ECP pointMultiplicationInG1() {
-		this.point = point.mul(random);
-		return point;
-	}
+  @Benchmark
+  public ECP pointMultiplicationInG1() {
+    this.point = point.mul(random);
+    return point;
+  }
 }
