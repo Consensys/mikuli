@@ -1,19 +1,20 @@
 package net.consensys.mikuli.crypto;
 
-import org.apache.milagro.amcl.BLS381.BIG;
-import org.apache.milagro.amcl.BLS381.ECP;
+import net.consensys.mikuli.crypto.group.G1Point;
+import net.consensys.mikuli.crypto.group.Scalar;
 
 public final class PrivateKey {
 
-	private final BIG privateKey;
+	private final Scalar scalarValue;
 
-	public PrivateKey(BIG privKey) {
-		this.privateKey = privKey;
+	PrivateKey(Scalar value) {
+		if (value == null) {
+			throw new NullPointerException("PrivateKey was not properly initialized");
+		}
+		this.scalarValue = value;
 	}
 
-	protected ECP sign(ECP p) {
-		ECP ecp = new ECP();
-		ecp.copy(p);
-		return ecp.mul(privateKey);
+	protected G1Point sign(G1Point message) {
+		return message.mul(scalarValue);
 	}
 }

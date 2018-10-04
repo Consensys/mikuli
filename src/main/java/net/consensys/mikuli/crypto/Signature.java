@@ -1,21 +1,47 @@
 package net.consensys.mikuli.crypto;
 
-import org.apache.milagro.amcl.BLS381.ECP;
+import net.consensys.mikuli.crypto.group.G1Point;
 
 public final class Signature {
-	private final ECP point;
+	private final G1Point point;
 
-	Signature(ECP signature) {
-		this.point = signature;
-	}
-
-	ECP getEcpPoint() {
-		return point;
+	Signature(G1Point point) {
+		if (point == null) {
+			throw new NullPointerException("Signature was not properly initialized");
+		}
+		this.point = point;
 	}
 
 	@Override
 	public String toString() {
 		return "Signature [ecpPoint=" + point + "]";
+	}
+
+	public Signature combine(Signature sig) {
+		return new Signature(point.add(sig.point));
+	}
+
+	/**
+	 * Signature serialization
+	 * 
+	 * @param signature The Signature, not null
+	 * @return byte array representation of the signature, not null
+	 */
+	public byte[] encode() {
+		return point.toBytes();
+	}
+
+	public static Signature decode(byte[] bytes) {
+		G1Point point = G1Point.fromBytes(bytes);
+		return new Signature(point);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((point == null) ? 0 : point.hashCode());
+		return result;
 	}
 
 	@Override
@@ -35,15 +61,7 @@ public final class Signature {
 		return true;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long x = point.getX().norm();
-		long y = point.getY().norm();
-		result = prime * result + (int) (x ^ (x >>> 32));
-		result = prime * result + (int) (y ^ (y >>> 32));
-		return result;
+	G1Point g1Point() {
+		return point;
 	}
-
 }

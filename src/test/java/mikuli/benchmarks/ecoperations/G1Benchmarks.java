@@ -11,7 +11,7 @@ import org.openjdk.jmh.annotations.*;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
-@Fork(3)
+@Fork(1)
 public class G1Benchmarks {
 
 	private ECP p;
