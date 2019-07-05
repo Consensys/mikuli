@@ -1,3 +1,5 @@
+thias library was integrated into https://github.com/PegaSysEng/artemis and this repository is not up to date with the recent ETH2 specyfication. 
+
 # mikuli
 
 Aggregation schema for ETH2.0
